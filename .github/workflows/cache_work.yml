@@ -1,0 +1,31 @@
+name: Cache Dependencies
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  cache-job:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Cache dependencies
+      id: cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache
+          # Add other dependency directories here e.g., node_modules, .m2, .gradle, etc.
+        key: cache-dc5cd94
+
+    - name: prime-cache-dc5cd94
+      run: |
+        if [ -n "${{ steps.cache.outputs.cache-hit }}" ]; then
+          echo "Cache hit: ${{ steps.cache.outputs.cache-hit }}"
+        else
+          echo "No cache hit"
+        fi
